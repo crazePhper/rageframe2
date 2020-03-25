@@ -23,15 +23,22 @@ class ArrayHelper extends BaseArrayHelper
      */
     public static function itemsMerge(array $items, $pid = 0, $idField = "id", $pidField = 'pid', $child = '-')
     {
-        $arr = [];
-        foreach ($items as $v) {
-            if ($v[$pidField] == $pid) {
-                $v[$child] = self::itemsMerge($items, $v[$idField], $idField, $pidField, $child);
-                $arr[] = $v;
+        $map  = [];
+        $tree = [];
+        //数据的ID名生成新的引用索引树
+        foreach ($items as &$it){
+            $map[$it[$idField]] = &$it;
+        }
+        foreach ($items as &$it){
+            $parent = &$map[$it[$pidField]];
+            if($parent) {
+                $parent[$child][] = &$it;
+            }else{
+                $tree[] = &$it;
             }
         }
-
-        return $arr;
+        unset($items,$map);
+        return $tree;
     }
 
     /**
