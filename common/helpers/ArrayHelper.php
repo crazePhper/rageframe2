@@ -25,7 +25,6 @@ class ArrayHelper extends BaseArrayHelper
     {
         $map  = [];
         $tree = [];
-        //数据的ID名生成新的引用索引树
         foreach ($items as &$it){
             $map[$it[$idField]] = &$it;
         }
